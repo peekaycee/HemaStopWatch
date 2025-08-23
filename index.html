@@ -44,11 +44,7 @@
       width: clamp(80px, 20%, 200px);
       font-size: clamp(1rem, 3vw, 1.5rem);
     }
-    @media screen and (max-width: 640px) {
-      input{
-        width: clamp(80px, 40%, 200px);
-      }
-    }
+
     .buttons {
       display: flex;
       align-items: center;
@@ -87,6 +83,12 @@
     @media screen and (max-width: 640px) {
       body{
         padding: 0 2em;
+      }
+      input{
+        width: clamp(80px, 40%, 200px);
+      }
+      #clock{
+        font-size: clamp(3rem, 20vw, 15rem);
       }
     }
   </style>
