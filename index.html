@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Clock</title>
+  <style>
+    *{
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+    body {overflow: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      height: 100dvh;
+      font-family: 'Digital-7 Mono';
+      background: #000;
+      color: #fff;
+      font-weight: bold;
+    }
+    h1{
+      font-size: clamp(5rem, 15vw, 20rem);
+      text-align: center;
+      word-break: break-word;
+    }
+    p{
+      font-family: "Ubuntu";
+      font-size: clamp(0.5rem, 1.5vw, 1rem);
+      text-align: center;
+      margin-top: 0.5em;
+      padding: 0 0.5rem;
+    }
+    input{
+      border: 0;
+      outline: none;
+      height: auto;
+      padding: 0.5em;
+      margin-top: 1.2em;
+      text-align: center;
+      width: clamp(80px, 20%, 200px);
+      font-size: clamp(1rem, 3vw, 1.5rem);
+    }
+    @media screen and (max-width: 640px) {
+      input{
+        width: clamp(80px, 40%, 200px);
+      }
+    }
+    .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 0;
+      margin-top: 0.7em;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      width: 100%;
+      height: auto;
+      max-width: 400px;
+      border-radius: 2px;
+    }
+    .buttons button {
+      border: 0;
+      border-right: solid 1px #999;
+      outline: none;
+      padding: 10px;
+      font-family: 'Fira Code';
+      font-weight: 500;
+      cursor: pointer;
+      background-color: #fff;
+      flex: 1 1 30%;
+      min-width: 100px;
+      font-size: clamp(0.5rem, 2vw, 1.1rem); 
+      border-radius: 2px;
+    }
+    .buttons button:last-child{
+      border: none;
+    }
+    .buttons button:hover {
+      background-color: #999;
+      color: #fff;
+    }
+    
+    @media screen and (max-width: 640px) {
+      body{
+        padding: 0 2em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="clock"></div>
+  <input type="text" id="userInput" placeholder="How long?" autofocus>
+  <div class="buttons">
+    <button type="button" id="hourStopWatch">Hours</button>
+    <button type="button" id="minStopWatch">Minutes</button>
+    <button type="button" id="restart">Restart</button>
+  </div>
+  <div>
+    <p id="error"></p>
+  </div>
+  <script>
+  let hourButton = document.getElementById("hourStopWatch");
+  let minButton = document.getElementById("minStopWatch");
+  let restartButton = document.getElementById("restart");
+  let userInput = document.getElementById("userInput");
+  let clientError = document.getElementById("error");
+  let clock = document.getElementById("clock");
+  clock.innerHTML = `<h1>00:00:00</h1>`;
+
+  let interval = null;
+
+  function hideFields(){
+    if (clock.innerHTML !== `<h1>00:00:00</h1>`){
+      hourButton.style.display = "none";
+      minButton.style.display = "none";
+      userInput.style.display = "none";
+      restartButton.style.width = "100%";
+    }
+  }
+
+  function showFields(){
+    hourButton.style.display = "block";
+    minButton.style.display = "block";
+    userInput.style.display = "block";
+  }
+  hourButton.addEventListener("click", () => {
+    clientError.innerHTML = "";
+    hourStopWatch();
+    hideFields()
+  });
+  minButton.addEventListener("click", () => {
+    clientError.innerHTML = "";
+    minStopWatch();
+    hideFields()
+  });
+  restartButton.addEventListener("click", () => {
+    clientError.innerHTML = "";
+    restart();
+  });
+
+  function restart() {
+    clearInterval(interval);
+    clock.innerHTML = `<h1>00:00:00</h1>`;
+    userInput.value = "";
+    showFields();
+  }
+
+  function displayTime(countInput, newSec) {
+    const hour = Math.floor(countInput / 60);
+    const minute = countInput % 60;
+
+    const hr = hour < 10 ? `0${hour}` : hour;
+    const min = minute < 10 ? `0${minute}` : minute;
+    const sec = newSec < 10 ? `0${newSec}` : newSec;
+
+    clock.innerHTML = `<h1>${hr}:${min}:${sec}</h1>`;
+  }
+
+  function hourStopWatch() {
+    clearInterval(interval);
+
+    let countInputHour;
+    try {
+      countInputHour = userInput.value;
+      userInput.value = "";
+      if (
+        countInputHour === null ||
+        countInputHour.trim() === "" ||
+        isNaN(countInputHour)
+      ) {
+        throw new Error("Invalid input. Please enter a number.");
+      }
+      countInputHour = Number(countInputHour);
+      if (countInputHour < 1) {
+        throw new Error("Only 1 hour or more allowed.");
+      }
+    } catch (err) {
+      clientError.innerHTML = `Please insert a valid number`;
+      return;
+    }
+
+    let countInput = countInputHour * 60 - 1;
+    let newSec = 59;
+
+    // ✅ Show the initial time immediately
+    displayTime(countInput, newSec);
+
+    interval = setInterval(() => {
+      newSec--;
+      if (newSec < 0) {
+        newSec = 59;
+        countInput--;
+      }
+      if (countInput < 0) {
+        clearInterval(interval);
+        clock.innerHTML = `<h1>Time Up!</h1>`;
+        return;
+      }
+      displayTime(countInput, newSec);
+    }, 1000);
+  }
+
+  function minStopWatch() {
+    clearInterval(interval);
+
+    let countInputMin;
+    try {
+      countInputMin = userInput.value;
+      userInput.value = "";
+      if (
+        countInputMin === null ||
+        countInputMin.trim() === "" ||
+        isNaN(countInputMin)
+      ) {
+        throw new Error("Invalid input. Please enter a number.");
+      }
+      countInputMin = Number(countInputMin);
+      if (countInputMin < 1) {
+        throw new Error("Only 1 minute or more allowed.");
+      }
+    } catch (err) {
+      clientError.innerHTML = `Please insert a valid number`;
+      return;
+    }
+
+    let countInput = countInputMin - 1;
+    let newSec = 59;
+
+    // ✅ Show the initial time immediately
+    displayTime(countInput, newSec);
+
+    interval = setInterval(() => {
+      newSec--;
+      if (newSec < 0) {
+        newSec = 59;
+        countInput--;
+      }
+      if (countInput < 0) {
+        clearInterval(interval);
+        clock.innerHTML = `<h1>Time Up!</h1>`;
+        return;
+      }
+      displayTime(countInput, newSec);
+    }, 1000);
+  }
+</script>
+</body>
+</html>
