@@ -87,7 +87,7 @@
       input{
         width: clamp(80px, 40%, 200px);
       }
-      #clock{
+      #clock h1{
         font-size: clamp(3rem, 20vw, 15rem);
       }
     }
@@ -200,6 +200,7 @@
       if (countInput < 0) {
         clearInterval(interval);
         clock.innerHTML = `<h1>Time Up!</h1>`;
+        clock.style.color = "#ff0000df";
         return;
       }
       displayTime(countInput, newSec);
@@ -244,6 +245,7 @@
       if (countInput < 0) {
         clearInterval(interval);
         clock.innerHTML = `<h1>Time Up!</h1>`;
+        clock.style.color = "#ff0000df";
         return;
       }
       displayTime(countInput, newSec);
