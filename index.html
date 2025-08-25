@@ -28,10 +28,15 @@
       color: #fff;
       font-weight: bold;
     }
-    h1{
+    h1, h2{
       font-size: clamp(5rem, 15vw, 20rem);
       text-align: center;
       word-break: break-word;
+    }
+    h2{
+      font-size: clamp(2rem, 10vw, 15rem);
+      font-family: 'Ubuntu';
+      font-weight: bold;
     }
     p{
       font-family: "Ubuntu";
@@ -96,7 +101,8 @@
       input{
         width: clamp(80px, 40%, 200px);
       }
-      #clock h1{
+      #clock h1,
+      #clock h2 {
         font-size: clamp(3rem, 20vw, 15rem);
       }
       .buttons button{
@@ -215,7 +221,7 @@
       }
       if (countInput < 0) {
         clearInterval(interval);
-        clock.innerHTML = `<h1>Time Up!</h1>`;
+        clock.innerHTML = `<h2>Time Up!</h2>`;
         clock.style.color = "#ff0000df";
         return;
       }
@@ -260,7 +266,7 @@
       }
       if (countInput < 0) {
         clearInterval(interval);
-        clock.innerHTML = `<h1>Time Up!</h1>`;
+        clock.innerHTML = `<h2>Time Up!</h2>`;
         clock.style.color = "#ff0000df";
         return;
       }
