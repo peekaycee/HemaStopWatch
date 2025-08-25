@@ -5,9 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Digital Clock</title>
   <style>
+      @font-face {
+      font-family: 'digital-7';
+      src: url('/fonts/digital-7.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
     @font-face {
-      font-family: 'digital-7', 'Ubuntu';
-      src: url('/fonts/digital-7.ttf'), url('/fonts/Ubuntu-Regular.ttf');
+      font-family: 'Ubuntu';
+      src: url('/fonts/Ubuntu-Regular.ttf') format('truetype');
       font-weight: normal;
       font-style: normal;
     }
@@ -16,7 +22,8 @@
       margin: 0;
       box-sizing: border-box;
     }
-    body {overflow: auto;
+    body {
+      overflow: auto;
       display: flex;
       flex-direction: column;
       justify-content: center;
